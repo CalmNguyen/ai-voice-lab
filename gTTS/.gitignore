@@ -1,0 +1,4 @@
+__pycache__/
+*.py[cod]
+AmThanh_Output/
+.openai_tts_settings.ini
