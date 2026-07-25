@@ -1,113 +1,105 @@
-gTTS – Simple Desktop Text To Speech App
+# gTTS Desktop Tools
 
-A simple desktop application that uses gTTS (Google Text-to-Speech – free) to convert text into MP3 audio files.
-Suitable for personal use, demos, and learning purposes.
+A free desktop text-to-speech app powered by
+[gTTS](https://pypi.org/project/gTTS/), plus a separate tool for adding an
+existing MP3 track to multiple MP4 videos.
 
-⚠️ Limit: ~60,000 characters per hour (Google policy, IP-based limit).
+[Vietnamese overview](../README_VN.md)
 
-📦 Project Structure
+## Project structure
+
+```text
 gTTS/
-├── merge.py              # Audio generator app (NO FFmpeg required)
-├── only_gtts.py          # Audio + video merge app (FFmpeg REQUIRED)
+├── only_gtts.py       # Generate MP3 files; FFmpeg is not required
+├── merge.py           # Add an MP3 track to MP4 videos; FFmpeg is required
+├── only_gtts.spec     # PyInstaller configuration for the TTS app
 ├── requirements.txt
 └── README.md
+```
 
-1️⃣ tts_app.py – Generate MP3 Audio (NO FFmpeg Required)
-✔ Features
+## Installation
 
-Convert text input into multiple .mp3 files
+From the repository root:
 
-Automatically split long text to avoid gTTS errors
+```powershell
+python -m pip install -r gTTS/requirements.txt
+```
 
-Track usage limit (60,000 characters per hour)
+## Generate speech with `only_gtts.py`
 
-Support multiple languages (default: Vietnamese)
+Features:
 
-Desktop UI built with PyQt6
+- Converts text into one or more MP3 files.
+- Splits long text into parts of fewer than 2,000 characters.
+- Displays an in-memory usage counter against the app's 60,000-character
+  hourly allowance.
+- Supports the languages exposed by gTTS and selects Vietnamese by default.
+- Provides normal and slow speech modes through a PyQt6 interface.
+- Does not require FFmpeg.
 
-No pydub used → FFmpeg is NOT required
+Run the app from the `gTTS` directory so its output is kept inside the project:
 
-✔ Required Libraries
-pip install gtts PyQt6
+```powershell
+Set-Location gTTS
+python only_gtts.py
+```
 
-▶ Run the app
-python tts_app.py
+Generated files are named `output_part_1.mp3`, `output_part_2.mp3`, and so on,
+and are saved in:
 
-📁 Output
+```text
+gTTS/AmThanh_Output/
+```
 
-Generated MP3 files will be saved in:
+gTTS is an online service. Availability and request limits are controlled by
+Google and may change.
 
-AmThanh_Output/
+## Merge audio and video with `merge.py`
 
-2️⃣ video_audio_merger.py – Merge Audio into Video (FFmpeg REQUIRED)
+This app does not generate speech. It adds one existing MP3 file to each
+selected MP4 file.
 
-⚠️ This file does NOT use gTTS
-👉 It is only used to merge existing .mp3 audio into multiple .mp4 videos.
+Features:
 
-✔ Features
+- Selects multiple MP4 videos and one MP3 audio file.
+- Trims the longer stream to the duration of the shorter stream.
+- Saves each result as `<original-name>_merged.mp4`.
+- Lets you choose the output directory.
+- Uses a lightweight Tkinter interface.
 
-Select multiple video files (.mp4)
+Run it from the `gTTS` directory:
 
-Select one audio file (.mp3)
+```powershell
+python merge.py
+```
 
-Automatically trim audio or video to match duration
+MoviePy requires a working FFmpeg installation. After installing FFmpeg and
+adding its `bin` directory to `PATH`, verify it with:
 
-Export merged videos as _merged.mp4
-
-Lightweight UI built with Tkinter
-
-❗ Requirements
-
-FFmpeg
-
-moviepy
-
-🔧 Install FFmpeg (Windows)
-
-Download FFmpeg:
-👉 https://ffmpeg.org/download.html
-
-Extract the archive
-
-Add the bin folder to PATH
-
-Verify installation:
-
+```powershell
 ffmpeg -version
+```
 
--- Build file to app .exe
-1️⃣ Install PyInstaller
-pip install pyinstaller
+## Build the TTS app for Windows
 
-2️⃣ Build the TTS app (tts_app.py)
+Install PyInstaller:
 
-This app does NOT require FFmpeg and is recommended for .exe distribution.
+```powershell
+python -m pip install pyinstaller
+```
 
-pyinstaller --onefile --windowed tts_app.py
+Then run the included spec file from the `gTTS` directory:
 
-Flags explained:
+```powershell
+Set-Location gTTS
+python -m PyInstaller --noconfirm --clean only_gtts.spec
+```
 
---onefile → bundle everything into a single .exe
+The executable is created at:
 
---windowed → hide the console window (GUI app)
+```text
+gTTS/dist/only_gtts.exe
+```
 
-3️⃣ Output location
-
-After the build completes, the executable will be located at:
-
-dist/tts_app.exe
-
-
-You only need to distribute the file inside the dist folder.
-
-4️⃣ Run the executable
-
-Double-click tts_app.exe
-
-Enter text
-
-Click Download MP3
-
-Output files will be saved to:
-
-AmThanh_Output/
+The TTS executable does not require FFmpeg. When launched, it creates
+`AmThanh_Output` in its current working directory.
