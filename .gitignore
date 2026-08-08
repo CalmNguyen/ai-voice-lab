@@ -1,0 +1,13 @@
+# Local credentials/settings and generated output
+*.json.tmp
+google_cloud/.google_cloud_tts_settings.ini
+google_cloud/*.json
+google_cloud/AmThanh_Output/
+openai/.openai_tts_settings.ini
+openai/AmThanh_Output/
+
+# Python cache/build files
+__pycache__/
+*.py[cod]
+build/
+dist/
