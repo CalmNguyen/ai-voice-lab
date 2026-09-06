@@ -1,6 +1,8 @@
-# AI Voice Lab
+# Free AI Voice Generator & Video Merger (gTTS, OpenAI, Google Cloud TTS)
 
 Small desktop tools for generating speech and combining audio with video.
+
+🚀 Looking for a Quick Web Version?If you don't want to install Python, dependencies, or configure FFmpeg, you can use our 100% Free Web Interface with no setup required:👉 Try TTS For Free Online
 
 [Vietnamese documentation](README_VN.md)
 
